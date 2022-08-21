@@ -2,21 +2,15 @@
 
 ## Environments
 
-POSTGRES_CONTAINER=string
-POSTGRES_HOST=host
-POSTGRES_PORT=5432
-POSTGRES_USER=user
-POSTGRES_PASSWORD=password
-POSTGRES_DATABASE=db
+- POSTGRES_CONTAINER=string
+- POSTGRES_HOST=host
+- POSTGRES_PORT=5432
+- POSTGRES_USER=user
+- POSTGRES_PASSWORD=password
+- POSTGRES_DATABASE=db
 
-TYPEORM_ENTITIES="path/to/entities/*.{ts,js}"
-TYPEORM_MIGRATIONS="path/to/migrations/*{.ts,.js}"
-
-TYPEORM_MIGRATIONS_DIR="path/to/migrations"
-
-PORT=9000
-MODE=DEV
-RUN_MIGRATIONS=false
+- PORT=9000
+- MODE=DEV
 
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>

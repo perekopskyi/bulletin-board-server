@@ -10,9 +10,9 @@ async function bootstrap() {
   // and "synchronize" database schema, call "initialize()" method of a newly created database
   // once in your application bootstrap
   AppDataSource.initialize()
-    .then(() => {
+    .then(({ isInitialized }) => {
       // here you can start to work with your database
-      console.log('!! init db');
+      console.log(`Data source connected: ${isInitialized}`);
     })
     .catch((error) => console.log(error));
 
