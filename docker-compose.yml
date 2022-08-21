@@ -1,0 +1,14 @@
+version: '3'
+services:
+  # frontend:
+  #   build: ./
+  #   container_name: frontend
+  #   ports:
+  #     - '3000:3000'
+
+  dev-db:
+    image: postgres
+    container_name: bulletin-board-postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: my_password
