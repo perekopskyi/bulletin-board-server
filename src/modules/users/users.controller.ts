@@ -10,7 +10,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { UserDto } from '../../database/entities/dto/user.dto';
+import { CreateUserDto, UserDto } from '../../database/dto/user.dto';
 import { UserScheme } from '../../schemes/user.scheme';
 import { UsersService } from './users.service';
 
@@ -36,7 +36,7 @@ export class UserController {
   @HttpCode(HttpStatus.CREATED)
   create(
     @Body()
-    userDto: UserDto,
+    userDto: CreateUserDto,
   ) {
     return this.usersService.create(userDto);
   }
