@@ -11,7 +11,6 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateUserDto, UserDto } from '../../database/dto/user.dto';
-import { UserScheme } from '../../schemes/user.scheme';
 import { UsersService } from './users.service';
 
 @ApiTags('Users')
@@ -20,7 +19,7 @@ export class UserController {
   constructor(private readonly usersService: UsersService) {}
 
   @ApiOperation({ summary: 'Get all users (remove password from response)' })
-  @ApiResponse({ status: HttpStatus.OK, type: [UserScheme] })
+  @ApiResponse({ status: HttpStatus.OK, type: [UserDto] })
   @Get()
   @HttpCode(HttpStatus.OK)
   findAll() {
@@ -30,7 +29,7 @@ export class UserController {
   @ApiOperation({ summary: 'Create user (remove password from response)' })
   @ApiResponse({
     status: HttpStatus.CREATED,
-    type: UserScheme,
+    type: UserDto,
   })
   @Post()
   @HttpCode(HttpStatus.CREATED)
@@ -42,17 +41,17 @@ export class UserController {
   }
 
   @ApiOperation({ summary: 'Get user by id (remove password from response)' })
-  @ApiResponse({ status: HttpStatus.OK, type: UserScheme })
-  @Get(':userId')
+  @ApiResponse({ status: HttpStatus.OK, type: UserDto })
+  @Get(':id')
   @HttpCode(HttpStatus.OK)
-  findOne(@Param('userId') userId: string) {
-    return this.usersService.findOne(userId);
+  findOne(@Param('id') id: string) {
+    return this.usersService.findOne(id);
   }
 
   @ApiOperation({
     summary: 'Update user by id (remove password from response)',
   })
-  @ApiResponse({ status: HttpStatus.OK, type: UserScheme })
+  @ApiResponse({ status: HttpStatus.OK, type: UserDto })
   @Put(':userId')
   @HttpCode(HttpStatus.OK)
   update(@Param('userId') userId: string, @Body() userDto: UserDto) {

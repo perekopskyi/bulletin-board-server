@@ -4,7 +4,7 @@ import { AppModule } from './app.module';
 import { AppDataSource } from './database/services/typeorm-config.service';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { cors: true });
 
   // to initialize initial connection with the database, register all entities
   // and "synchronize" database schema, call "initialize()" method of a newly created database
@@ -19,7 +19,7 @@ async function bootstrap() {
   const swaggerConfig = new DocumentBuilder()
     .setTitle('NodeJs-Bulletin-Board-App service')
     .setDescription('This is service description')
-    .setVersion('1.0')
+    .setVersion('1.0.2')
     .build();
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('api', app, document);

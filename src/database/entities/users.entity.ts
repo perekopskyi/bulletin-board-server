@@ -1,15 +1,16 @@
-import { BeforeInsert, Column, Entity } from 'typeorm';
+import { BeforeInsert, Column, Entity, JoinColumn, OneToMany } from 'typeorm';
 import { Exclude, instanceToPlain } from 'class-transformer';
 import * as bcrypt from 'bcrypt';
 import { BaseEntity } from './base.entity';
 import { IsOptional } from 'class-validator';
+import { PostsEntity } from './posts.entity';
 
 @Entity({ name: 'users' })
 export class UsersEntity extends BaseEntity {
   @Column({ type: 'varchar', nullable: false, unique: true })
   username: string;
 
-  @Column({ type: 'varchar', nullable: false })
+  @Column({ type: 'varchar', nullable: false, unique: true })
   email: string;
 
   @Exclude({ toPlainOnly: true })
@@ -17,11 +18,11 @@ export class UsersEntity extends BaseEntity {
   password: string;
 
   @IsOptional()
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'varchar', default: '' })
   firstName: string;
 
   @IsOptional()
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'varchar', default: '' })
   lastName: string;
 
   @BeforeInsert()
@@ -33,8 +34,7 @@ export class UsersEntity extends BaseEntity {
     return instanceToPlain(this);
   }
 
-  // toResponse() {
-  //   const { password, ...rest } = this;
-  //   return { ...rest };
-  // }
+  @OneToMany(() => PostsEntity, (post) => post.author)
+  @JoinColumn()
+  posts: PostsEntity[];
 }

@@ -18,13 +18,13 @@ export abstract class BaseEntity {
   @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
   created: Date;
 
-  @Column({ type: 'varchar', length: 300 })
+  @Column({ type: 'varchar', length: 300, nullable: true })
   createdBy: string;
 
   @UpdateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
   updated: Date;
 
-  @Column({ type: 'varchar', length: 300 })
+  @Column({ type: 'varchar', length: 300, nullable: true })
   updatedBy: string;
 
   @Column({ type: 'varchar', length: 300, nullable: true })

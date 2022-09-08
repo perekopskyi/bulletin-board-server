@@ -7,7 +7,6 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { comparePasswords } from '../../shared/comparePasswords';
-import { toUserDto } from '../../shared/mapper';
 import {
   CreateUserDto,
   LoginUserDto,
@@ -28,14 +27,21 @@ export class UsersService {
   }
 
   async findAll() {
-    const users = await this.userRepository.find();
-    return users.map((user) => toUserDto(user));
+    const users = await this.userRepository.find({
+      relations: {
+        posts: true,
+      },
+    });
+    return users.map((user) => user);
   }
 
   async findOne(id: string) {
-    const user = await this.userRepository.findOneBy({ id });
+    const user = await this.userRepository.findOne({
+      where: { id },
+      relations: ['posts'],
+    });
 
-    if (user) return toUserDto(user);
+    if (user) return user;
 
     throw new NotFoundException(`User with id = ${id} was not found`);
   }
@@ -94,6 +100,10 @@ export class UsersService {
     return user;
   }
 
+  async findByPayload({ username }: any): Promise<UserDto> {
+    return await this.userRepository.findOneBy({ username });
+  }
+
   async isLoginExists(username: string) {
     const user = await this.findByUsername(username);
     if (user) {
@@ -101,9 +111,5 @@ export class UsersService {
         `User with username = ${username} already exists`,
       );
     }
-  }
-
-  async findByPayload({ username }: any): Promise<UserDto> {
-    return await this.userRepository.findOneBy({ username });
   }
 }
