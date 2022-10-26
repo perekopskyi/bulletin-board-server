@@ -7,7 +7,7 @@ import {
 
 export abstract class BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  public id: string;
 
   @Column({ type: 'boolean', default: true })
   isActive: boolean;

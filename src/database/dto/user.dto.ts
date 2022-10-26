@@ -16,13 +16,30 @@ export class CreateUserDto {
   @ApiProperty({ example: 'P123*', description: 'Password user' })
   @IsNotEmpty({ message: 'The user password cannot be empty' })
   @IsString({ message: 'The user password must be a string' })
-  password!: string;
+  password?: string;
 
   @IsString({ message: 'The user first name must be a string' })
   firstName?: string;
 
   @IsString({ message: 'The user last name must be a string' })
   lastName?: string;
+}
+
+// TODO Swagger
+export class UpdateUserDto {
+  id?: string;
+  username: string;
+  email: string;
+  password?: string;
+  firstName?: string;
+  lastName?: string;
+}
+
+// TODO make Archive User logic
+export class ArchiveUserDto {
+  id?: string;
+  isActive?: boolean;
+  isArchived?: boolean;
 }
 
 export class UserDto {

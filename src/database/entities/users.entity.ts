@@ -8,26 +8,35 @@ import { PostsEntity } from './posts.entity';
 @Entity({ name: 'users' })
 export class UsersEntity extends BaseEntity {
   @Column({ type: 'varchar', nullable: false, unique: true })
-  username: string;
+  public username: string;
 
   @Column({ type: 'varchar', nullable: false, unique: true })
-  email: string;
+  public email: string;
 
   @Exclude({ toPlainOnly: true })
-  @Column({ type: 'varchar', nullable: false })
-  password: string;
+  @Column({ type: 'varchar', nullable: true })
+  public password?: string;
 
   @IsOptional()
   @Column({ type: 'varchar', default: '' })
-  firstName: string;
+  public firstName: string;
 
   @IsOptional()
   @Column({ type: 'varchar', default: '' })
-  lastName: string;
+  public lastName: string;
+
+  @Column({ default: false })
+  public isRegisteredWithGoogle: boolean;
+
+  @Exclude()
+  @Column({ nullable: true })
+  public currentHashedRefreshToken?: string;
 
   @BeforeInsert()
   async hashPassword() {
-    this.password = await bcrypt.hash(this.password, 10);
+    if (!this.isRegisteredWithGoogle) {
+      this.password = await bcrypt.hash(this.password, 10);
+    }
   }
 
   toJSON() {
