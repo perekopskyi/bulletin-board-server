@@ -6,12 +6,14 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { comparePasswords } from '../../shared/comparePasswords';
+import * as bcrypt from 'bcrypt';
 import {
   CreateUserDto,
   LoginUserDto,
+  UpdateUserDto,
   UserDto,
 } from '../../database/dto/user.dto';
+import { SchemaUserinfo } from '../auth/interfaces';
 import { UsersEntity } from '../../database/entities/users.entity';
 
 @Injectable()
@@ -21,9 +23,42 @@ export class UsersService {
     private userRepository: Repository<UsersEntity>,
   ) {}
 
+  async removeRefreshToken(userId: string) {
+    return await this.userRepository.update(userId, {
+      currentHashedRefreshToken: null,
+    });
+  }
+
+  async getUserIfRefreshTokenMatches(refreshToken: string, userId: string) {
+    const user = await this.findOne(userId);
+
+    const isRefreshTokenMatching = await bcrypt.compare(
+      refreshToken,
+      user.currentHashedRefreshToken,
+    );
+
+    if (isRefreshTokenMatching) {
+      return user;
+    }
+  }
+
+  async setCurrentRefreshToken(refreshToken: string, userId: string) {
+    const currentHashedRefreshToken = await bcrypt.hash(refreshToken, 10);
+    await this.userRepository.update(userId, {
+      currentHashedRefreshToken,
+    });
+  }
+
   async create(userDto: CreateUserDto) {
     const createdUser = this.userRepository.create(userDto);
     return await this.userRepository.save(createdUser);
+  }
+
+  async createWithGoogle(userBody: SchemaUserinfo) {
+    const newUser = this.userRepository.create(userBody);
+    await this.userRepository.save(newUser);
+
+    return newUser;
   }
 
   async findAll() {
@@ -54,7 +89,7 @@ export class UsersService {
     }
   }
 
-  async update(id: string, userDto: UserDto) {
+  async update(id: string, userDto: UpdateUserDto) {
     if (userDto.id) delete userDto.id;
     const updatedUser = await this.userRepository.findOne({
       where: { id },
@@ -83,6 +118,29 @@ export class UsersService {
 
     return user;
   }
+  async findByEmail(email: string) {
+    const user = await this.userRepository.findOneBy({ email });
+
+    if (!user) {
+      throw new NotFoundException(`User with email = '${email}' was not found`);
+    }
+
+    return user;
+  }
+
+  private async verifyPassword(
+    plainTextPassword: string,
+    hashedPassword: string,
+  ) {
+    const isPasswordMatching = await bcrypt.compare(
+      plainTextPassword,
+      hashedPassword,
+    );
+
+    if (!isPasswordMatching) {
+      throw new BadRequestException('Wrong credentials provided');
+    }
+  }
 
   async findByLogin({ username, password }: LoginUserDto): Promise<UserDto> {
     const user = await this.userRepository.findOneBy({ username });
@@ -91,11 +149,7 @@ export class UsersService {
       throw new UnauthorizedException('User not found');
     }
 
-    const areEqual = await comparePasswords(user.password, password);
-
-    if (!areEqual) {
-      throw new UnauthorizedException('Invalid credentials');
-    }
+    await this.verifyPassword(password, user.password);
 
     return user;
   }

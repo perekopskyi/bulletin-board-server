@@ -10,7 +10,11 @@ import {
   Put,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CreateUserDto, UserDto } from '../../database/dto/user.dto';
+import {
+  CreateUserDto,
+  UpdateUserDto,
+  UserDto,
+} from '../../database/dto/user.dto';
 import { UsersService } from './users.service';
 
 @ApiTags('Users')
@@ -54,7 +58,7 @@ export class UserController {
   @ApiResponse({ status: HttpStatus.OK, type: UserDto })
   @Put(':userId')
   @HttpCode(HttpStatus.OK)
-  update(@Param('userId') userId: string, @Body() userDto: UserDto) {
+  update(@Param('userId') userId: string, @Body() userDto: UpdateUserDto) {
     return this.usersService.update(userId, userDto);
   }
 

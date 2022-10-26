@@ -19,7 +19,7 @@ import {
   DetailedPostDto,
 } from '../../database/dto/post.dto';
 import { UserDto } from '../../database/dto/user.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth.gurd';
+import { JwtAuthGuard } from '../auth/guards/jwtAuth.guard';
 import { PostsService } from './posts.service';
 
 @ApiTags('Posts')

@@ -1,5 +1,7 @@
-import { Injectable } from '@nestjs/common';
-import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
+/**
+ * This file used for generating and running migrations
+ */
+
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { config } from 'dotenv';
 config();
@@ -17,12 +19,5 @@ const OPTIONS = {
   logging: true,
   synchronize: false,
 } as DataSourceOptions;
-
-@Injectable()
-export class TypeOrmConfigService implements TypeOrmOptionsFactory {
-  createTypeOrmOptions(): TypeOrmModuleOptions | Promise<TypeOrmModuleOptions> {
-    return OPTIONS;
-  }
-}
 
 export const AppDataSource = new DataSource(OPTIONS);

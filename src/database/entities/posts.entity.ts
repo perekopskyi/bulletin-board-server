@@ -1,5 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { BaseEntity } from './base.entity';
+import { Category } from './category.entity';
 import { UsersEntity } from './users.entity';
 
 @Entity({ name: 'posts' })
@@ -19,6 +20,10 @@ export class PostsEntity extends BaseEntity {
   @ManyToOne(() => UsersEntity, (user) => user.posts)
   @JoinColumn()
   author: UsersEntity;
+
+  @ManyToOne(() => Category, (category) => category.posts)
+  @JoinColumn()
+  category: Category;
 
   @Column({ type: 'text', nullable: true })
   image: string;
