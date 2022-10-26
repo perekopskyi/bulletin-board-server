@@ -1,5 +1,4 @@
-export interface LoginStatus {
-  username: string;
-  expiresIn: string;
-  accessToken: string;
+export interface LogoutStatus {
+  message: string;
+  status: number;
 }
