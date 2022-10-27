@@ -9,5 +9,5 @@ export class Category extends BaseEntity {
 
   @OneToMany(() => PostsEntity, (post) => post.category)
   @JoinColumn()
-  posts: PostsEntity[];
+  public posts: PostsEntity[];
 }

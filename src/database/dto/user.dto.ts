@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { PostsEntity } from '../entities/posts.entity';
 
@@ -19,9 +19,11 @@ export class CreateUserDto {
   password?: string;
 
   @IsString({ message: 'The user first name must be a string' })
+  @IsOptional()
   firstName?: string;
 
   @IsString({ message: 'The user last name must be a string' })
+  @IsOptional()
   lastName?: string;
 }
 

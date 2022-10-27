@@ -28,7 +28,6 @@ export class PostsEntity extends BaseEntity {
   @Column({ type: 'text', nullable: true })
   image: string;
 
-  // TODO add categoryId
   // @Column({ type: 'timestamptz', default: () =>  })
   // expiredAt: Date;
 }
