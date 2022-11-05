@@ -34,7 +34,7 @@ export class AuthController {
     @Body() loginUserDto: LoginUserDto,
     @Req() request: RequestWithUser,
     @Res() response: Response,
-  ): Promise<any> {
+  ): Promise<Response> {
     const user = await this.authService.login(loginUserDto);
     const accessTokenCookie = this.authService.getCookieWithJwtAccessToken(
       user.id,
@@ -54,7 +54,7 @@ export class AuthController {
   public async logout(
     @Req() request: RequestWithUser,
     @Res() response: Response,
-  ) {
+  ): Promise<Response> {
     await this.usersService.removeRefreshToken(request.user.id);
     request.res.setHeader('Set-Cookie', this.authService.getCookieForLogOut());
     const logoutResponse: LogoutStatus = {
