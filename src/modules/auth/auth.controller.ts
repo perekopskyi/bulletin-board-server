@@ -55,7 +55,7 @@ export class AuthController {
     @Req() request: RequestWithUser,
     @Res() response: Response,
   ): Promise<Response> {
-    await this.usersService.removeRefreshToken(request.user.id);
+    await this.usersService.removeRefreshToken(request.body.id);
     request.res.setHeader('Set-Cookie', this.authService.getCookieForLogOut());
     const logoutResponse: LogoutStatus = {
       message: 'Successful',
