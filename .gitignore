@@ -4,6 +4,7 @@
 /scripts/write-type-orm-config.ts
 .env
 ormconfig.json
+/postgres
 
 # Logs
 logs
