@@ -1,9 +1,9 @@
 import { BeforeInsert, Column, Entity, JoinColumn, OneToMany } from 'typeorm';
 import { Exclude, instanceToPlain } from 'class-transformer';
-import * as bcrypt from 'bcrypt';
-import { BaseEntity } from './base.entity';
 import { IsOptional } from 'class-validator';
-import { PostsEntity } from './posts.entity';
+import * as bcrypt from 'bcrypt';
+import { BaseEntity } from '../../database/base.entity';
+import { PostsEntity } from '../posts/posts.entity';
 
 @Entity({ name: 'users' })
 export class UsersEntity extends BaseEntity {

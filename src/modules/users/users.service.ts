@@ -12,9 +12,9 @@ import {
   LoginUserDto,
   UpdateUserDto,
   UserDto,
-} from '../../database/dto/user.dto';
+} from './user.dto';
 import { SchemaUserinfo } from '../auth/interfaces';
-import { UsersEntity } from '../../database/entities/users.entity';
+import { UsersEntity } from './users.entity';
 
 @Injectable()
 export class UsersService {
@@ -22,12 +22,6 @@ export class UsersService {
     @InjectRepository(UsersEntity)
     private userRepository: Repository<UsersEntity>,
   ) {}
-
-  async removeRefreshToken(userId: string) {
-    return await this.userRepository.update(userId, {
-      currentHashedRefreshToken: null,
-    });
-  }
 
   async getUserIfRefreshTokenMatches(refreshToken: string, userId: string) {
     const user = await this.findOne(userId);
@@ -40,13 +34,6 @@ export class UsersService {
     if (isRefreshTokenMatching) {
       return user;
     }
-  }
-
-  async setCurrentRefreshToken(refreshToken: string, userId: string) {
-    const currentHashedRefreshToken = await bcrypt.hash(refreshToken, 10);
-    await this.userRepository.update(userId, {
-      currentHashedRefreshToken,
-    });
   }
 
   async create(userDto: CreateUserDto) {

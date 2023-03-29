@@ -1,6 +1,6 @@
 import { IsNotEmpty } from 'class-validator';
-import { BaseDto } from './base.dto';
-import { DetailedUserDto } from './user.dto';
+import { BaseDto } from '../../database/base.dto';
+import { DetailedUserDto } from '../users/user.dto';
 
 export class CreatePostDto {
   @IsNotEmpty() title: string;

@@ -14,7 +14,7 @@ const OPTIONS = {
   password: process.env.POSTGRES_PASSWORD,
   database: process.env.POSTGRES_DATABASE,
 
-  entities: ['src/database/entities/*.{ts,js}'],
+  entities: ['src/**/*.entity.{ts,js}'],
   migrations: ['src/database/migrations/*.{ts,js}'],
   logging: true,
   synchronize: false,

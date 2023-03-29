@@ -13,12 +13,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import {
-  CreatePostDto,
-  PostDto,
-  DetailedPostDto,
-} from '../../database/dto/post.dto';
-import { UserDto } from '../../database/dto/user.dto';
+import { CreatePostDto, PostDto, DetailedPostDto } from './post.dto';
+import { UserDto } from '../users/user.dto';
 import { JwtAuthGuard } from '../auth/guards/jwtAuth.guard';
 import { PostsService } from './posts.service';
 

@@ -11,8 +11,7 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
-import { CreateUserDto, LoginUserDto } from '../../database/dto/user.dto';
-import { UsersService } from '../users/users.service';
+import { CreateUserDto, LoginUserDto } from '../users/user.dto';
 import { AuthService } from './auth.service';
 import { RegistrationStatus } from './interfaces';
 import { RequestWithUser } from './interfaces/requestWithUser.interface';
@@ -23,10 +22,7 @@ import { JwtRefreshGuard } from './guards/jwtRefresh.guard';
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-  constructor(
-    private authService: AuthService,
-    private readonly usersService: UsersService,
-  ) {}
+  constructor(private authService: AuthService) {}
 
   @HttpCode(200)
   @Post('login')
@@ -42,7 +38,7 @@ export class AuthController {
     const { cookie, refreshToken } =
       this.authService.getCookieWithJwtRefreshToken(user.id);
 
-    await this.usersService.setCurrentRefreshToken(refreshToken, user.id);
+    await this.authService.setCurrentRefreshToken(refreshToken, user.id);
 
     request.res.setHeader('Set-Cookie', [accessTokenCookie, cookie]);
     return response.send(user);
@@ -55,7 +51,7 @@ export class AuthController {
     @Req() request: RequestWithUser,
     @Res() response: Response,
   ): Promise<Response> {
-    await this.usersService.removeRefreshToken(request.body.id);
+    await this.authService.deleteSessionByUserId(request.body.id);
     request.res.setHeader('Set-Cookie', this.authService.getCookieForLogOut());
     const logoutResponse: LogoutStatus = {
       message: 'Successful',

@@ -1,7 +1,7 @@
-import { DetailedPostDto, PostDto } from '../database/dto/post.dto';
-import { DetailedUserDto, UserDto } from '../database/dto/user.dto';
-import { PostsEntity } from '../database/entities/posts.entity';
-import { UsersEntity } from '../database/entities/users.entity';
+import { DetailedPostDto, PostDto } from '../modules/posts/post.dto';
+import { DetailedUserDto, UserDto } from '../modules/users/user.dto';
+import { PostsEntity } from '../modules/posts/posts.entity';
+import { UsersEntity } from '../modules/users/users.entity';
 
 export const toUserDto = (user: UsersEntity): UserDto => {
   const { id, username, email } = user;

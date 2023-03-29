@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreatePostDto, PostDto } from '../../database/dto/post.dto';
-import { UserDto } from '../../database/dto/user.dto';
-import { PostsEntity } from '../../database/entities/posts.entity';
-import { UsersEntity } from '../../database/entities/users.entity';
+import { CreatePostDto, PostDto } from './post.dto';
+import { UserDto } from '../users/user.dto';
+import { PostsEntity } from './posts.entity';
+import { UsersEntity } from '../users/users.entity';
 import { toDetailedPostDto, toPostDto } from '../../shared/mapper';
 import { UsersService } from '../users/users.service';
 
@@ -71,6 +71,7 @@ export class PostsService {
       throw new NotFoundException(`Post with id = ${id} was not found`);
     }
   }
+
   async update(id: string, postDto: PostDto) {
     if (postDto.id) delete postDto.id;
 

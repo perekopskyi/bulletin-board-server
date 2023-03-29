@@ -2,16 +2,17 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import {
-  CreateUserDto,
-  LoginUserDto,
-  UserDto,
-} from '../../database/dto/user.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import * as bcrypt from 'bcrypt';
+import { Like, Repository } from 'typeorm';
+import { CreateUserDto, LoginUserDto, UserDto } from '../users/user.dto';
 import { comparePasswords } from '../../shared/comparePasswords';
+import { SessionEntity } from '../session/session.entity';
 import { UsersService } from '../users/users.service';
 import { TokenPayload } from './interfaces/payload.interface';
 import { RegistrationStatus } from './interfaces';
@@ -23,6 +24,8 @@ export class AuthService {
     private readonly configService: ConfigService,
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
+    @InjectRepository(SessionEntity)
+    private sessionRepository: Repository<SessionEntity>,
   ) {}
 
   public getCookiesForLogOut() {
@@ -109,5 +112,30 @@ export class AuthService {
 
   public getCookieForLogOut() {
     return `Authentication=; HttpOnly; Path=/; Max-Age=0`;
+  }
+
+  async setCurrentRefreshToken(refreshToken: string, userId: string) {
+    const user = await this.usersService.findOne(userId);
+
+    const currentHashedRefreshToken = await bcrypt.hash(refreshToken, 10);
+    const session = this.sessionRepository.create({
+      currentHashedRefreshToken,
+      user,
+    });
+    return await this.sessionRepository.save(session);
+  }
+
+  async deleteSessionByUserId(userId: string): Promise<void> {
+    const session = await this.sessionRepository.findOne({
+      where: {
+        user: Like(userId),
+      },
+    });
+
+    if (!session) {
+      throw new NotFoundException('Session not found');
+    }
+
+    await this.sessionRepository.remove(session);
   }
 }

@@ -3,7 +3,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UsersEntity } from '../../database/entities/users.entity';
+import { SessionModule } from '../session/session.module';
+import { UsersEntity } from '../users/users.entity';
 import { UsersService } from '../users/users.service';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
@@ -31,6 +32,7 @@ import { JwtRefreshTokenStrategy, JwtStrategy } from './jwt.strategy';
         },
       }),
     }),
+    SessionModule,
   ],
   controllers: [AuthController, GoogleAuthenticationController],
   providers: [

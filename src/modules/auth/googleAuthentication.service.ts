@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { google, Auth } from 'googleapis';
-import { UsersEntity } from '../../database/entities/users.entity';
+import { UsersEntity } from '../users/users.entity';
 import { UsersService } from '../users/users.service';
 import { AuthService } from './auth.service';
 
@@ -73,8 +73,8 @@ export class GoogleAuthenticationService {
     );
     const { cookie: refreshTokenCookie, refreshToken } =
       this.authService.getCookieWithJwtRefreshToken(user.id);
-
-    await this.usersService.setCurrentRefreshToken(refreshToken, user.id);
+    // Save refreshToken in DB
+    await this.authService.setCurrentRefreshToken(refreshToken, user.id);
 
     return {
       accessTokenCookie,
