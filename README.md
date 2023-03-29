@@ -24,10 +24,10 @@ yarn run:dev:env
 $ yarn start:dev:db
 
 # add migrations
-$ yarn typeorm:migrations:run
+$ yarn typeorm:migration:run
 
 # generate new migration
-$ yarn typeorm:migrations:generate src/database/migrations/$migrationName
+$ yarn typeorm:migration:generate src/database/migrations/$migrationName
 ```
 
 ## Running the app
