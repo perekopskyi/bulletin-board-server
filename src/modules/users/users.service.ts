@@ -49,12 +49,10 @@ export class UsersService {
   }
 
   async findAll() {
-    const users = await this.userRepository.find({
-      relations: {
-        posts: true,
-      },
-    });
-    return users.map((user) => user);
+    return await this.userRepository
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.posts', 'post')
+      .getMany();
   }
 
   async findOne(id: string) {
