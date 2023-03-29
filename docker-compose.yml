@@ -1,37 +1,36 @@
-version: '3'
+version: '3.4'
+
 services:
-  # frontend:
-  #   build: ./
-  #   container_name: frontend
-  #   ports:
-  #     - '3000:3000'
-
-  dev-db:
-    container_name: bulletin-board-postgres
-    image: postgres:14
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: api
     ports:
-      - '5432:5432'
-    # volumes:
-    #   - ~/data/postgres:/data/postgres
-    env_file: .env
-    networks:
-      - postgres
-    restart: always
-    environment:
-      POSTGRES_PASSWORD: myS3cr3tp@ssw0rd
+      - '9000:9000'
+    volumes:
+      - .:/app
+      - /app/node_modules
+    env_file:
+      - .env
+    depends_on:
+      - db
+    command: yarn start:dev
 
-  # pgadmin:
-  #   links:
-  #     - dev-db:dev-db
-  #   container_name: pgadmin
-  #   image: dpage/pgadmin4
-  #   ports:
-  #     - '8080:80'
-  #   volumes:
-  #     - ~/data/pgadmin:/root/.pgadmin
-  #   env_file: .env
-  #   networks:
-  #     - postgres
+  db:
+    container_name: ${POSTGRES_CONTAINER}
+    image: postgres:15
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    env_file:
+      - .env
+    restart: always
+
 networks:
   postgres:
     driver: bridge
+
+volumes:
+  postgres:

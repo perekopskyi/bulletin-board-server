@@ -6,10 +6,18 @@
 ## Installation
 
 ```bash
-$ yarn -f
+# Install node_modules
+yarn -f
 ```
 
-## Running Database
+## Running app for development
+
+```bash
+# Run DB in Docker and backend in terminal
+yarn run:dev:env
+```
+
+## Running only Database
 
 ```bash
 # development
@@ -17,6 +25,9 @@ $ yarn start:dev:db
 
 # add migrations
 $ yarn typeorm:migrations:run
+
+# generate new migration
+$ yarn typeorm:migrations:generate src/database/migrations/$migrationName
 ```
 
 ## Running the app
