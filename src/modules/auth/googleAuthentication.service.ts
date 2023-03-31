@@ -83,12 +83,6 @@ export class GoogleAuthenticationService {
   }
 
   async handleRegisteredUser(user: UsersEntity) {
-    if (!user.isRegisteredWithGoogle) {
-      throw new UnauthorizedException(
-        'User with current email already existed',
-      );
-    }
-
     const { accessTokenCookie, refreshTokenCookie } =
       await this.getCookiesForUser(user);
 

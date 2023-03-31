@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import {
   CreateUserDto,
@@ -14,6 +14,7 @@ import {
   UserDto,
 } from './user.dto';
 import { SchemaUserinfo } from '../auth/interfaces';
+import { SessionEntity } from '../session/session.entity';
 import { UsersEntity } from './users.entity';
 
 @Injectable()
@@ -21,19 +22,27 @@ export class UsersService {
   constructor(
     @InjectRepository(UsersEntity)
     private userRepository: Repository<UsersEntity>,
+    @InjectRepository(SessionEntity)
+    private sessionRepository: Repository<SessionEntity>,
   ) {}
 
   async getUserIfRefreshTokenMatches(refreshToken: string, userId: string) {
-    const user = await this.findOne(userId);
+    const session = await this.sessionRepository.findOne({
+      where: {
+        user: Like(userId),
+      },
+    });
 
     const isRefreshTokenMatching = await bcrypt.compare(
       refreshToken,
-      user.currentHashedRefreshToken,
+      session.currentHashedRefreshToken,
     );
 
-    if (isRefreshTokenMatching) {
-      return user;
+    if (!isRefreshTokenMatching) {
+      throw new UnauthorizedException(`Refresh token missing`);
     }
+
+    return await this.findOne(userId);
   }
 
   async create(userDto: CreateUserDto) {

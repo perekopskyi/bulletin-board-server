@@ -28,10 +28,6 @@ export class UsersEntity extends BaseEntity {
   @Column({ default: false })
   public isRegisteredWithGoogle: boolean;
 
-  @Exclude()
-  @Column({ nullable: true })
-  public currentHashedRefreshToken?: string;
-
   @BeforeInsert()
   async hashPassword() {
     if (!this.isRegisteredWithGoogle) {
