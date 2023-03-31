@@ -12,11 +12,19 @@ echo "🚀 Stop & remove old docker [$POSTGRES_CONTAINER] and starting new fresh
 
 # Wait for pg to start
 echo "🚀 Sleep wait for pg-container [$POSTGRES_CONTAINER] to start"
-sleep 3
-until PGPASSWORD="$POSTGRES_PASSWORD" psql -h "$POSTGRES_HOST" -U "$POSTGRES_USER" -d "$POSTGRES_DATABASE" -c '\q'; do
+sleep 5
+
+# Check if the database exists
+until PGPASSWORD="$POSTGRES_PASSWORD" psql -h "$POSTGRES_HOST" -U "$POSTGRES_USER" -lqt | cut -d \| -f 1 | grep -qw "$POSTGRES_DATABASE"; do
   >&2 echo "Postgres is unavailable - sleeping"
   sleep 3
 done
+
+# Exit the loop if the database already exists
+if PGPASSWORD="$POSTGRES_PASSWORD" psql -h "$POSTGRES_HOST" -U "$POSTGRES_USER" -d "$POSTGRES_DATABASE" -c '\q'; then
+  echo "🚀 Database $POSTGRES_DATABASE already exists."
+  exit 0
+fi
 
 # Create the PostgreSQL database
 echo "🚀 Creating database $POSTGRES_DATABASE ..."
