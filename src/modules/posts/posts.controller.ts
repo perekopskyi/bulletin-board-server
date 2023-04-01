@@ -13,7 +13,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CreatePostDto, PostDto, DetailedPostDto } from './post.dto';
+import {
+  CreatePostDto,
+  PostDto,
+  DetailedPostDto,
+  UpdatePostDto,
+} from './post.dto';
 import { UserDto } from '../users/user.dto';
 import { JwtAuthGuard } from '../auth/guards/jwtAuth.guard';
 import { PostsService } from './posts.service';
@@ -54,7 +59,7 @@ export class PostsController {
 
   @UseGuards(JwtAuthGuard)
   @Put(':postId')
-  update(@Param('postId') postId: string, @Body() postDto: PostDto) {
+  update(@Param('postId') postId: string, @Body() postDto: UpdatePostDto) {
     return this.postsService.update(postId, postDto);
   }
 

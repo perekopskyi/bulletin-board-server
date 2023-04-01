@@ -20,6 +20,11 @@ export class PostDto extends BaseDto {
   // TODO viewed
 }
 
+export class UpdatePostDto extends BaseDto {
+  @IsNotEmpty() title: string;
+  @IsNotEmpty() text: string;
+}
+
 export class DetailedPostDto extends BaseDto {
   author: DetailedUserDto;
   image: string;
